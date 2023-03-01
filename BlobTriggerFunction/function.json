@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "name": "myBlob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "igeni/{name}",
+      "connection": "igenie_STORAGE"
+    }
+  ],
+  "scriptFile": "../dist/BlobTriggerFunction/index.js"
+}
