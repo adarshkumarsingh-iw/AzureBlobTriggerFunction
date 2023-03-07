@@ -1,8 +1,6 @@
-import { IsString } from "class-validator";
+import { IsBoolean, IsString } from "class-validator";
 
 export class BulkUploadDto {
-  @IsString()
-  location: string;
   @IsString()
   categoryId: string;
   @IsString()
@@ -17,4 +15,8 @@ export class BulkUploadDto {
   type: string;
   @IsString()
   createdBy: string;
+  @IsString()
+  dataProcessingId: string;
+  @IsBoolean()
+  isLastBatch: boolean = false;
 }

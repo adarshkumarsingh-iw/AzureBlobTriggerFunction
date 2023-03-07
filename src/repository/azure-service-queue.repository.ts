@@ -20,14 +20,20 @@ export class ServiceBusQueue {
 
   async sendMessages(listOfMessage: any, dataInformation: any) {
     let batch = await this.sender.createMessageBatch();
+    let isLastBatch = false;
 
     for (let i = 0; i < listOfMessage.length; i++) {
+      if (i === listOfMessage.length - 1) {
+        isLastBatch = true;
+      }
+
       const message = {
         body: {
-          data: listOfMessage[i],
-          userProperties: JSON.stringify(dataInformation),
+          rows: listOfMessage[i],
+          userProperties: JSON.stringify({ ...dataInformation, isLastBatch }),
         },
       };
+
       if (!batch.tryAddMessage(message)) {
         await this.sender.sendMessages(batch);
         batch = await this.sender.createMessageBatch();
