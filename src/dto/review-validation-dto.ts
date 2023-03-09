@@ -15,6 +15,10 @@ export class ReviweSchemaDto {
     this.Analysis6MM = "";
     this.Analysis3MM = "";
     this.Analysis1MM = "";
+    this.locationId = "";
+    this.productId = "";
+    this.categoryId = "";
+    this.createdBy = "";
   }
 
   JoiningKey: string;
@@ -46,4 +50,12 @@ export class ReviweSchemaDto {
   Analysis3MM: string;
 
   Analysis1MM: string;
+
+  createdBy: string;
+
+  productId: string;
+
+  locationId: string;
+
+  categoryId: string;
 }

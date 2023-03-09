@@ -34,7 +34,6 @@ class BlobRepository {
           dataInformation
         );
         const validatedRows = validateReviewArray(generateRows);
-        console.log("Validate Row", validatedRows);
         await this.queueProcessing(validatedRows, dataInformation, fileName);
       }
       default:
@@ -53,7 +52,15 @@ class BlobRepository {
   ): Promise<any[]> {
     try {
       const reader = await parquet.ParquetReader.openFile(filePath);
-      const cursor = reader.getCursor();
+
+      const schema = reader.schema;
+
+      // Exception Case
+      const includedColumnIndexes = schema.fieldList
+        .filter((field) => field.name !== "CrawlTimestamp")
+        .map((field) => field.name);
+
+      const cursor = reader.getCursor(includedColumnIndexes);
 
       const records: any[] = [];
       let item: any = null;
@@ -91,6 +98,8 @@ class BlobRepository {
       const batches = this.batchProcessing(generatedObject, 255500);
       await queue.initialize();
       await queue.sendMessages(batches, dataInformation);
+      await queue.close();
+      console.log("******* Completed Sending The Message ********");
     } catch (error) {
       console.error(error);
       queue.close();

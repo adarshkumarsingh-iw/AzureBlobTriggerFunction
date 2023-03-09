@@ -1,19 +1,7 @@
-import * as xlsx from "xlsx";
 import { BLANKS } from "../constants/app-constants";
 import { BulkUploadDto } from "../dto/bulk-upload.dto";
 import { ReviweSchemaDto } from "../dto/review-validation-dto";
 import { SkuSchemaDto } from "../dto/sku-validation-dto";
-
-export const excelToJson = (filePath) => {
-  const headers = 0;
-  const workbook = xlsx.readFile(filePath);
-  //   fs.unlinkSync(filePath);
-  const ws = workbook.Sheets[workbook.SheetNames[0]];
-  const rows: any = xlsx.utils.sheet_to_json(ws, {
-    header: headers,
-  });
-  return rows;
-};
 
 export const getFileExtention = (filePath: string) => {
   return filePath.split(".").pop();

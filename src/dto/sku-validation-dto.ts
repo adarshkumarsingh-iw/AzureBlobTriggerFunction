@@ -52,6 +52,10 @@ export class SkuSchemaDto {
     this.ProductTags = "";
     this.ProductContents = "";
     this.ProductImageUrl = "";
+    this.locationId = "";
+    this.productId = "";
+    this.categoryId = "";
+    this.createdBy = "";
   }
   JoiningKey: string;
   Retailer: string;
@@ -105,4 +109,8 @@ export class SkuSchemaDto {
   ProductTags: string;
   ProductContents: string;
   ProductImageUrl: string;
+  createdBy: string;
+  productId: string;
+  locationId: string;
+  categoryId: string;
 }
