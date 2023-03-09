@@ -35,7 +35,7 @@ class BlobRepository {
         );
         const validatedRows = validateReviewArray(generateRows);
         console.log("Validate Row", validatedRows);
-        // await this.queueProcessing(validatedRows, dataInformation, fileName);
+        await this.queueProcessing(validatedRows, dataInformation, fileName);
       }
       default:
         break;
