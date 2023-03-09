@@ -2,6 +2,7 @@ import * as xlsx from "xlsx";
 import { BLANKS } from "../constants/app-constants";
 import { BulkUploadDto } from "../dto/bulk-upload.dto";
 import { ReviweSchemaDto } from "../dto/review-validation-dto";
+import { SkuSchemaDto } from "../dto/sku-validation-dto";
 
 export const excelToJson = (filePath) => {
   const headers = 0;
@@ -67,6 +68,39 @@ export const validateReviewArray = (data: any) => {
             validatedObj[newKey] = 0;
           } else if (key == "ReviewTimestamp") {
             validatedObj[newKey] = null;
+          } else {
+            validatedObj[newKey] = BLANKS;
+          }
+        }
+      }
+    }
+
+    result.push(validatedObj);
+  }
+
+  return result;
+};
+
+export const validateSkuArray = (data: any) => {
+  const result = [];
+  for (const obj of data) {
+    const validatedObj = {};
+    for (const key in obj) {
+      const newKey = key.trim().charAt(0).toLowerCase() + key.trim().slice(1);
+      if (key in SkuSchemaDto) {
+        const value = obj[key];
+        if (value !== undefined && value !== null && value !== "") {
+          validatedObj[newKey] = value;
+        } else {
+          if (
+            key == "ProductRating" ||
+            key == "ProductRatingsCount" ||
+            key == "RatingsXReviews" ||
+            key == "ProductReviewsCount" ||
+            key == "ProductPrice" ||
+            key == "ProductAvailableInventory"
+          ) {
+            validatedObj[newKey] = 0;
           } else {
             validatedObj[newKey] = BLANKS;
           }

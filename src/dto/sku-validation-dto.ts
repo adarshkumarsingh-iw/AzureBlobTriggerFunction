@@ -1,4 +1,4 @@
-export class SkuSchema {
+export class SkuSchemaDto {
   JoiningKey: string;
   Retailer: string;
   Manufacturer: string;

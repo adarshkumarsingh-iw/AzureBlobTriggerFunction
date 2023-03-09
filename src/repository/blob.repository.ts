@@ -1,6 +1,10 @@
 var parquet = require("fast-parquet");
 import { BLANKS, DATA_TYPES } from "../constants/app-constants";
-import { extractString, validateReviewArray } from "../utils/helper";
+import {
+  extractString,
+  validateReviewArray,
+  validateSkuArray,
+} from "../utils/helper";
 import * as fs from "fs";
 import { BulkUploadDto } from "../dto/bulk-upload.dto";
 import { ServiceBusQueue } from "./azure-service-queue.repository";
@@ -19,7 +23,9 @@ class BlobRepository {
             filePath,
             dataInformation
           );
-          await this.queueProcessing(generateRows, dataInformation, fileName);
+          const validatedRows = validateSkuArray(generateRows);
+          console.log(validatedRows);
+          await this.queueProcessing(validatedRows, dataInformation, fileName);
         }
         break;
       case DATA_TYPES.REVIEWS: {
