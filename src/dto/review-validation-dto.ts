@@ -1,4 +1,22 @@
 export class ReviweSchemaDto {
+  constructor() {
+    this.JoiningKey = "";
+    this.ReviewId = "";
+    this.ReviewRating = 0;
+    this.ReviewTimestamp = new Date();
+    this.ReviewTitle = "";
+    this.ReviewBody = "";
+    this.ReviewTimestampYM = 0;
+    this.Sentiment = 0;
+    this.Theme = "";
+    this.Topic = "";
+    this.Sentencescore = 0;
+    this.Analysis12MM = "";
+    this.Analysis6MM = "";
+    this.Analysis3MM = "";
+    this.Analysis1MM = "";
+  }
+
   JoiningKey: string;
 
   ReviewId: string;

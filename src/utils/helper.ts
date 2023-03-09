@@ -50,11 +50,12 @@ export const removeDateFromString = (input: string): string => {
 
 export const validateReviewArray = (data: any) => {
   const result = [];
+  const dto = new ReviweSchemaDto();
   for (const obj of data) {
     const validatedObj = {};
     for (const key in obj) {
       const newKey = key.trim().charAt(0).toLowerCase() + key.trim().slice(1);
-      if (key in ReviweSchemaDto) {
+      if (key in dto) {
         const value = obj[key];
         if (value !== undefined && value !== null && value !== "") {
           validatedObj[newKey] = value;
@@ -77,17 +78,17 @@ export const validateReviewArray = (data: any) => {
 
     result.push(validatedObj);
   }
-
   return result;
 };
 
 export const validateSkuArray = (data: any) => {
   const result = [];
+  const dto = new SkuSchemaDto();
   for (const obj of data) {
     const validatedObj = {};
     for (const key in obj) {
       const newKey = key.trim().charAt(0).toLowerCase() + key.trim().slice(1);
-      if (key in SkuSchemaDto) {
+      if (key in dto) {
         const value = obj[key];
         if (value !== undefined && value !== null && value !== "") {
           validatedObj[newKey] = value;

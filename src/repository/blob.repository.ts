@@ -1,5 +1,6 @@
 var parquet = require("fast-parquet");
-import { BLANKS, DATA_TYPES } from "../constants/app-constants";
+
+import { DATA_TYPES } from "../constants/app-constants";
 import {
   extractString,
   validateReviewArray,
@@ -24,7 +25,6 @@ class BlobRepository {
             dataInformation
           );
           const validatedRows = validateSkuArray(generateRows);
-          console.log(validatedRows);
           await this.queueProcessing(validatedRows, dataInformation, fileName);
         }
         break;
@@ -34,8 +34,8 @@ class BlobRepository {
           dataInformation
         );
         const validatedRows = validateReviewArray(generateRows);
-        console.log(validatedRows);
-        await this.queueProcessing(validatedRows, dataInformation, fileName);
+        console.log("Validate Row", validatedRows);
+        // await this.queueProcessing(validatedRows, dataInformation, fileName);
       }
       default:
         break;
@@ -51,27 +51,31 @@ class BlobRepository {
     filePath: string,
     dataInformation: BulkUploadDto
   ): Promise<any[]> {
-    const reader = await parquet.ParquetReader.openFile(filePath);
-    const cursor = reader.getCursor();
+    try {
+      const reader = await parquet.ParquetReader.openFile(filePath);
+      const cursor = reader.getCursor();
 
-    const records: any[] = [];
-    let item: any = null;
+      const records: any[] = [];
+      let item: any = null;
 
-    while ((item = await cursor.next())) {
-      const formattedRecord = {};
+      while ((item = await cursor.next())) {
+        records.push({
+          ...item,
+          createdBy: dataInformation.createdBy,
+          productId: dataInformation.productId,
+          locationId: dataInformation.locationId,
+          categoryId: dataInformation.categoryId,
+        });
+      }
 
-      item["createdBy"] = dataInformation.createdBy;
-      item["productId"] = dataInformation.productId;
-      item["locationId"] = dataInformation.locationId;
-      item["categoryId"] = dataInformation.categoryId;
+      await reader.close();
+      await fs.promises.unlink(filePath);
 
-      records.push(formattedRecord);
+      return records;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-
-    await reader.close();
-    await fs.promises.unlink(filePath);
-
-    return records;
   }
 
   private async queueProcessing(
