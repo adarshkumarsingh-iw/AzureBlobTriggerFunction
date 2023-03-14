@@ -1,16 +1,18 @@
 // const { ServiceBusClient } = require("@azure/service-bus");
 // const fs = require("fs");
 // var parquet = require("fast-parquet");
+// const { BlobServiceClient } = require("@azure/storage-blob");
+// const console = require("console");
 
 // // connection string to your Service Bus namespace
 // const connectionString =
-//   "Endpoint=sb://igeniequeue.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=k9eHVkQNU/7Er3k3QmedYIg1nY4RtiNH8+ASbB2Zd1Q=";
+//   "DefaultEndpointsProtocol=https;AccountName=igeniestorage;AccountKey=AmrjLdHsx4UPU9UItYcccGXnnho6E/yIyhYCav751Apjy5ZYY9JmtBAVhGO7LA0JxW28VFhTpHhv+AStQXGy1g==;EndpointSuffix=core.windows.net";
 
 // // name of the queue
-// const queueName =
-//   "23a405d9-4873-40c3-af55-4a7bdfe06e80_d9c4c5b8-b05a-40b8-ad26-ddef11c801ba_12bea96f-f9cb-442d-9a57-922586451ade_2021-02-20_2022-05-20_SKUREVIEWS_30a89098-48da-405b-8b0f-f76314fb7216_1d4a8afd-665b-44f5-96bd-40b24c5c1db3-1677677342545";
+// // const queueName =
+// //   "23a405d9-4873-40c3-af55-4a7bdfe06e80_d9c4c5b8-b05a-40b8-ad26-ddef11c801ba_12bea96f-f9cb-442d-9a57-922586451ade_2021-02-20_2022-05-20_SKUREVIEWS_30a89098-48da-405b-8b0f-f76314fb7216_1d4a8afd-665b-44f5-96bd-40b24c5c1db3-1677677342545";
 
-// const messages = [];
+// // const messages = [];
 
 // async function main(filePath) {
 //   // // create a Service Bus client using the connection string to the Service Bus namespace
@@ -76,15 +78,13 @@
 //   // } finally {
 //   //   await sbClient.close();
 //   // }
-//   const reader = await parquet.ParquetReader.openFile(filePath);
 
-//   console.log(reader.envelopeReader);
+//   //   const fp = `file/test.parquet`;
+//   //   fs.writeFileSync(fp, "file/review_v1.parquet");
 
-//   // const includedColumnIndexes = schema.fieldList
-//   //   .filter((field) => field.name !== "CrawlTimestamp")
-//   //   .map((field) => field.name);
+//   // const reader = await parquet.ParquetReader.openFile(filePath);
 
-//   // const cursor = reader.getCursor(includedColumnIndexes);
+//   // const cursor = reader.getCursor();
 
 //   // const records = [];
 //   // let record = null;
@@ -94,13 +94,43 @@
 //   // }
 
 //   // console.log(records);
-//   await reader.close();
+//   //   await reader.close();
+
+//   const blobServiceClient =
+//     BlobServiceClient.fromConnectionString(connectionString);
+
+//   const containerClient = blobServiceClient.getContainerClient("igeni");
+
+//   const blobClient = containerClient.getBlobClient(
+//     "6433e2cd-5c88-4edb-aea8-3463d8580f7c_b0a3e58f-2f3e-4f80-8ec3-883285e93f5f_4a89753e-5290-4cca-b1d1-71c81b5affa6_2021-02-20_2022-05-20_REVIEWS_dff139a2-35d2-49a9-bcee-a85898f709de_e6e8cb7f-1dad-421b-8554-afc5fae8a8a5-1678763320744"
+//   );
+
+//   const buffer = await blobClient.downloadToBuffer();
+
+//   //   console.log(buffer);
+
+//   //   fs.writeFileSync("file/test.parquet", buffer);
+
+//   //   console.log(buffer);
+
+//   //   const buffer = fs.readFileSync("file/test.parquet");
+
+//   const reader = await parquet.ParquetReader.openBuffer(buffer);
+
+//   const cursor = reader.getCursor();
+
+//   const records = [];
+//   let record = null;
+
+//   while ((record = await cursor.next())) {
+//     records.push(record);
+//   }
+
+//   console.log(records);
 // }
 
 // // call the main function
-// main(
-//   "/Users/impulsiveweb/Desktop/BlobTriggerServerlessApp/file/sku_v1.parquet"
-// ).catch((err) => {
+// main("file/test.parquet").catch((err) => {
 //   console.log("Error occurred: ", err);
 //   process.exit(1);
 // });

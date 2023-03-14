@@ -95,7 +95,8 @@ class BlobRepository {
       queueName
     );
     try {
-      const batches = this.batchProcessing(generatedObject, 255500);
+      const batches = this.batchProcessing(generatedObject, 255000);
+      console.log(batches);
       await queue.initialize();
       await queue.sendMessages(batches, dataInformation);
       await queue.close();
